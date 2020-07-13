@@ -1,6 +1,10 @@
 {
     "dashboardMetadata": {
-        "name": ""
+        "name": "",
+        "sharingDetails": {
+            "linkShared": true,
+            "published": true
+        }
     },
     "tiles": [{
         "name": "Fact",
