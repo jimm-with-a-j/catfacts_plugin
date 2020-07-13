@@ -1,0 +1,90 @@
+{
+  "name": "custom.remote.python.catfacts",
+  "version": "0.1",
+  "type": "python",
+  "entity": "CUSTOM_DEVICE",
+  "metricGroup": "tech.Custom_Technology",
+  "processTypeNames": ["PYTHON"],
+  "technologies": ["Custom Technology"],
+  "source": {
+    "package": "catfacts_plugin",
+    "className": "CatfactsPluginRemote",
+    "install_requires": ["requests>=2.6.0"],
+    "activation": "Remote"
+  },
+  "metrics": [
+    {
+      "entity": "CUSTOM_DEVICE",
+      "timeseries": {
+        "key": "numberofcats",
+        "unit": "Count",
+        "displayname": "Number of cats"
+      }
+    }
+  ],
+  "properties" : [
+    {
+	  "key" : "dashboardname",
+      "type" :  "String"
+    },
+    {
+      "key": "environmenturl",
+      "type": "String"
+    },
+    {
+      "key": "token",
+      "type": "Password"
+    }
+  ],
+  "configUI": {
+        "displayName": "Cat Facts Plugin",
+        "properties": [
+         {
+           "key" : "dashboardname",
+           "displayName" :  "Dashboard name",
+           "displayHint": "Cat Dashboard"
+         },
+         {
+           "key": "environmenturl",
+           "displayName": "Environment URL"
+         },
+         {
+           "key": "token",
+           "displayName": " API Token"
+         }
+	  ]
+    },
+     "ui": {
+       "keymetrics" : [
+      {
+        "key": "numberofcats",
+        "aggregation": "avg",
+        "mergeaggregation": "avg",
+        "displayname": "# of Cats"
+      }
+      ],
+        "charts": [
+            {
+                "group": "Demo group",
+                "title": "Demo title",
+                "description": "Demo description",
+                "explanation": "Not used",
+                "link": "Demo link",
+                "series": [
+                    {
+                        "key": "numberofcats",
+                        "displayname": "# of Cats",
+                        "aggregation": "avg",
+                        "mergeaggregation": "avg",
+                        "color": "#00a6fb",
+                        "seriestype": "line",
+                        "rightaxis": false,
+                        "stacked": false,
+                        "unit": "Count",
+                        "metricexplanation": "Total number of cats"
+                    }
+                ]
+            }
+        ]
+    }
+}

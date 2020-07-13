@@ -1,0 +1,30 @@
+{
+    "dashboardMetadata": {
+        "name": ""
+    },
+    "tiles": [{
+        "name": "Fact",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+            "top": 38,
+            "left": 0,
+            "width": 608,
+            "height": 190
+        },
+        "tileFilter": {},
+        "markdown": "Sample Text"
+    },
+    {
+        "name": "Cat Fact:",
+        "tileType": "HEADER",
+        "configured": true,
+        "bounds": {
+            "top": 0,
+            "left": 0,
+            "width": 608,
+            "height": 38
+        },
+        "tileFilter": {}
+    }]
+}
