@@ -1,6 +1,7 @@
 {
     "dashboardMetadata": {
         "name": "",
+        "shared": true,
         "sharingDetails": {
             "linkShared": true,
             "published": true
