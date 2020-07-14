@@ -2,6 +2,8 @@ import requests
 from ruxit.api.base_plugin import RemoteBasePlugin
 import json
 import logging
+from pathlib import Path
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -30,14 +32,13 @@ class CatfactsPluginRemote(RemoteBasePlugin):
         else:
             response = requests.put(self.dashboard_endpoint + '/' + existing_dashboard_id, headers=self.auth_headers, json=self.generate_dashboard_json())
 
-        print(response.status_code)
-        print(response.content)
-
     def generate_dashboard_json(self):
-        template_file = open("dashboard_template.json", "r")
+        logger.info("Current directory:" + os.getcwd())
+        template_location = Path(__file__).absolute().parent / 'dashboard_template.json'
+        template_file = open(template_location, "r")
         dashboard_json = json.load(template_file)
         template_file.close()
-        dashboard_json["dashboardMetadata"]["name"] = self.dashboardname         #set custom name
+        dashboard_json["dashboardMetadata"]["name"] = self.dashboardname
 
         #Update fact
         for tile in dashboard_json["tiles"]:
