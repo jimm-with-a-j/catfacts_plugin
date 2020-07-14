@@ -1,6 +1,6 @@
 {
   "name": "custom.remote.python.catfacts",
-  "version": "0.2",
+  "version": "0.3",
   "type": "python",
   "entity": "CUSTOM_DEVICE",
   "metricGroup": "tech.Custom_Technology",
