@@ -21,7 +21,10 @@ class CatfactsPluginRemote(RemoteBasePlugin):
 
     def get_fact(self):
         response = requests.get('https://catfact.ninja/facts')
-        fact = response.json()['data'][0]['fact']
+        if response.status_code == 200:
+            fact = response.json()['data'][0]['fact']
+        else:
+            fact = "Cat fact service unavailable :("
         return fact
 
     def create_or_update_dashboard(self):
@@ -31,9 +34,10 @@ class CatfactsPluginRemote(RemoteBasePlugin):
             response = requests.post(self.dashboard_endpoint, headers=self.auth_headers, json=self.generate_dashboard_json())
         else:
             response = requests.put(self.dashboard_endpoint + '/' + existing_dashboard_id, headers=self.auth_headers, json=self.generate_dashboard_json())
+        logger.info("Dashboard API call response code: " + str(response.status_code))
 
     def generate_dashboard_json(self):
-        logger.info("Current directory:" + os.getcwd())
+        logger.info("Current directory: " + os.getcwd())
         template_location = Path(__file__).absolute().parent / 'dashboard_template.json'
         template_file = open(template_location, "r")
         dashboard_json = json.load(template_file)
