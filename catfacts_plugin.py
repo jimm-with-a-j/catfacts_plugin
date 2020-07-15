@@ -4,6 +4,7 @@ import json
 import logging
 from pathlib import Path
 import os
+from functools import lru_cache
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +20,9 @@ class CatfactsPluginRemote(RemoteBasePlugin):
     def query(self, **kwargs):
         self.create_or_update_dashboard()
 
+        # reset lru cache so we catch any changes that have been  made between runs
+        self.check_for_existing_dashboard.cache_clear()
+
     def get_fact(self):
         response = requests.get('https://catfact.ninja/facts')
         if response.status_code == 200:
@@ -31,9 +35,13 @@ class CatfactsPluginRemote(RemoteBasePlugin):
         dashboard_json = self.generate_dashboard_json()
         existing_dashboard_id = self.check_for_existing_dashboard()
         if existing_dashboard_id == "":
-            response = requests.post(self.dashboard_endpoint, headers=self.auth_headers, json=self.generate_dashboard_json())
+            response = requests.post(self.dashboard_endpoint,
+                                     headers=self.auth_headers,
+                                     json=dashboard_json)
         else:
-            response = requests.put(self.dashboard_endpoint + '/' + existing_dashboard_id, headers=self.auth_headers, json=self.generate_dashboard_json())
+            response = requests.put(self.dashboard_endpoint + '/' + existing_dashboard_id,
+                                    headers=self.auth_headers,
+                                    json=dashboard_json)
         logger.info("Dashboard API call response code: " + str(response.status_code))
 
     def generate_dashboard_json(self):
@@ -56,6 +64,8 @@ class CatfactsPluginRemote(RemoteBasePlugin):
 
         return dashboard_json
 
+    # using lru cache to avoid making multiple calls per execution
+    @lru_cache(maxsize=1)
     def check_for_existing_dashboard(self):
         # Check if dashboard already exists (by name) - empty string returned if no match
         existing_dash_id = ""
@@ -64,7 +74,7 @@ class CatfactsPluginRemote(RemoteBasePlugin):
             for dashboard in response.json()['dashboards']:
                 if dashboard['name'] == self.dashboardname:
                     existing_dash_id = dashboard["id"]
-
+        logger.info("Existing dash id: " + existing_dash_id)
         return existing_dash_id
 
 
