@@ -1,6 +1,6 @@
 {
   "name": "custom.remote.python.catfacts",
-  "version": "0.4",
+  "version": "0.5",
   "type": "python",
   "entity": "CUSTOM_DEVICE",
   "metricGroup": "tech.Custom_Technology",
@@ -34,6 +34,10 @@
     {
       "key": "token",
       "type": "Password"
+    },
+    {
+      "key": "validateSSL",
+      "type": "Boolean"
     }
   ],
   "configUI": {
@@ -51,6 +55,10 @@
          {
            "key": "token",
            "displayName": " API Token"
+         },
+         {
+           "key": "validateSSL",
+           "displayName": "Validate SSL Certs?"
          }
 	  ]
     },

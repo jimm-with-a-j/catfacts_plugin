@@ -16,6 +16,7 @@ class CatfactsPluginRemote(RemoteBasePlugin):
         self.dashboard_endpoint = self.environmenturl + "/api/config/v1/dashboards"
         self.token  = self.config["token"]
         self.auth_headers = {'Authorization': 'Api-Token ' + self.token, 'Content-Type': 'application/json'}
+        self.validateSSL = self.config["validateSSL"]
 
     def query(self, **kwargs):
         self.create_or_update_dashboard()
@@ -37,11 +38,13 @@ class CatfactsPluginRemote(RemoteBasePlugin):
         if existing_dashboard_id == "":
             response = requests.post(self.dashboard_endpoint,
                                      headers=self.auth_headers,
-                                     json=dashboard_json)
+                                     json=dashboard_json,
+                                     verify=self.validateSSL)
         else:
             response = requests.put(self.dashboard_endpoint + '/' + existing_dashboard_id,
                                     headers=self.auth_headers,
-                                    json=dashboard_json)
+                                    json=dashboard_json,
+                                    verify=self.validateSSL)
         logger.info("Dashboard API call response code: " + str(response.status_code))
 
     def generate_dashboard_json(self):
@@ -69,7 +72,7 @@ class CatfactsPluginRemote(RemoteBasePlugin):
     def check_for_existing_dashboard(self):
         # Check if dashboard already exists (by name) - empty string returned if no match
         existing_dash_id = ""
-        response = requests.get(self.dashboard_endpoint, headers=self.auth_headers)
+        response = requests.get(self.dashboard_endpoint, headers=self.auth_headers, verify=self.validateSSL)
         if response.status_code == 200:
             for dashboard in response.json()['dashboards']:
                 if dashboard['name'] == self.dashboardname:
