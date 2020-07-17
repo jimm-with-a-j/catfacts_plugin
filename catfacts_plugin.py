@@ -8,6 +8,10 @@ from functools import lru_cache
 
 logger = logging.getLogger(__name__)
 
+CAT_API_ENPOINT = "https://catfact.ninja/facts"
+DASHBOARD_TEMPLATE_NAME = "dashboard_template.json"
+FACT_TILE_NAME = "Fact"
+
 class CatfactsPluginRemote(RemoteBasePlugin):
     def initialize(self, **kwargs):
         logger.info("Config: %s", self.config)
@@ -25,7 +29,7 @@ class CatfactsPluginRemote(RemoteBasePlugin):
         self.check_for_existing_dashboard.cache_clear()
 
     def get_fact(self):
-        response = requests.get('https://catfact.ninja/facts')
+        response = requests.get(CAT_API_ENPOINT)
         if response.status_code == 200:
             fact = response.json()['data'][0]['fact']
         else:
@@ -49,7 +53,7 @@ class CatfactsPluginRemote(RemoteBasePlugin):
 
     def generate_dashboard_json(self):
         logger.info("Current directory: " + os.getcwd())
-        template_location = Path(__file__).absolute().parent / 'dashboard_template.json'
+        template_location = Path(__file__).absolute().parent / DASHBOARD_TEMPLATE_NAME
         template_file = open(template_location, "r")
         dashboard_json = json.load(template_file)
         template_file.close()
@@ -57,7 +61,7 @@ class CatfactsPluginRemote(RemoteBasePlugin):
 
         #Update fact
         for tile in dashboard_json["tiles"]:
-            if tile["name"] == "Fact":
+            if tile["name"] == FACT_TILE_NAME:
                 tile["markdown"] = self.get_fact()
                 break
 
